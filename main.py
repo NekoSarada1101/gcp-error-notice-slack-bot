@@ -1,13 +1,11 @@
 import base64
 import json
 import requests
-from datetime import datetime, timedelta
 from settings import *
 
 
 def main(event, context):
     pubsub_message = base64.b64decode(event['data']).decode('utf-8')  # type: json
-    # JSON形式の文字列を辞書に変換
     log_data = json.loads(pubsub_message)  # type: dict
     print(log_data)
 
@@ -28,9 +26,6 @@ def main(event, context):
             }
         },
         {
-            "type": "divider"
-        },
-        {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
@@ -49,8 +44,6 @@ def main(event, context):
     url = "https://slack.com/api/chat.postMessage"
     data = {
         "channel": CHANNEL_ID,
-        "username": "GCP Error",
-        "icon_emoji": ":googlecloud:",
         "blocks": str(blocks_data),
     }
     headers = {'Content-Type': 'application/json',
