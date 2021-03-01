@@ -14,7 +14,7 @@ def main(event, context):
     log_name = log_data["logName"]
     resource = log_data["resource"]["labels"]
     resource_data = ""
-    for key, value in resource:
+    for key, value in resource.items():
         resource_data = resource_data + "{} : {}\n".format(key, value)
 
     log = log_data["textPayload"]
