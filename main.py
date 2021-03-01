@@ -12,6 +12,11 @@ def main(event, context):
     print(log_data)
 
     log_name = log_data["logName"]
+    resource = log_data["resource"]["labels"]
+    resource_data = ""
+    for key, value in resource:
+        resource_data = resource_data + "{} : {}\n".format(key, value)
+
     log = log_data["textPayload"]
 
     blocks_data = [
@@ -29,7 +34,14 @@ def main(event, context):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "*ログ情報*\n{}".format(log)
+                "text": "*ResourceInfo*\n{}".format(resource_data)
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*LogInfo*\n{}".format(log)
             }
         },
     ]
