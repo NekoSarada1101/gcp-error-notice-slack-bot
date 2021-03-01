@@ -1,6 +1,8 @@
 import base64
 import json
+import requests
 from datetime import timedelta
+from settings import *
 
 
 def main(event, context):
@@ -12,6 +14,41 @@ def main(event, context):
     log_name = log_data["logName"]
     time = (log_name["receiveTimestamp"] + timedelta(hours=9)).strftime("%m/%d %H:%M:%s")
     log = log_data["textPayload"]
+
+    blocks_data = [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "{}\n*{}*".format(time, log_name)
+            }
+        },
+        {
+            "type": "divider"
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*ログ情報*\n{}".format(log)
+            }
+        },
+    ]
+
+    url = "https://slack.com/api/chat.postMessage"
+    data = {
+        "channel": CHANNEL_ID,
+        "username": "GCP Error",
+        "icon_emoji": ":googlecloud:",
+        "blocks": blocks_data,
+    }
+    headers = {'Content-Type': 'application/json',
+               "Authorization": "Bearer " + BOT_USER_OAUTH_TOKEN}
+
+    json_data = json.dumps(data).encode("utf-8")
+    response = requests.post(url, json_data, headers=headers)
+    print(response)
+
 
 if __name__ == '__main__':
     main("event", "context")
