@@ -12,8 +12,6 @@ def main(event, context):
     print(log_data)
 
     log_name = log_data["logName"]
-    time = (datetime.strptime("2021-03-01T08:58:17.29752278Z"[0:19], '%Y-%m-%dT%H:%M:%S')
-            + timedelta(hours=9)).strftime('%Y/%m/%d %H:%M:%S')
     log = log_data["textPayload"]
 
     blocks_data = [
@@ -21,7 +19,7 @@ def main(event, context):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "{}\n*{}*".format(time, log_name)
+                "text": "*LogName*\n{}".format(log_name)
             }
         },
         {
