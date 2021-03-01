@@ -1,12 +1,59 @@
 import base64
 import json
+import requests
+from settings import *
 
 
 def main(event, context):
-    pubsub_message = base64.b64decode(event['data']).decode('utf-8')
-    # JSON形式の文字列を辞書に変換
-    d = json.loads(pubsub_message)
-    print(d)
+    pubsub_message = base64.b64decode(event['data']).decode('utf-8')  # type: json
+    log_data = json.loads(pubsub_message)  # type: dict
+    print(log_data)
+
+    log_name = log_data["logName"]  # type: str
+    resource = log_data["resource"]["labels"]  # type: dict
+    resource_data = ""  # type: str
+    for key, value in resource.items():
+        resource_data = resource_data + "{} : {}\n".format(key, value)
+
+    log = log_data["textPayload"]  # type: str
+
+    blocks_data = [  # type: dict
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*LogName*\n{}".format(log_name)
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*ResourceInfo*\n{}".format(resource_data)
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*LogInfo*\n{}".format(log)
+            }
+        },
+    ]
+
+    url = "https://slack.com/api/chat.postMessage"  # type: str
+    data = {  # type: dict
+        "channel": CHANNEL_ID,
+        "blocks": str(blocks_data),
+    }
+    print(data)
+    headers = {'Content-Type': 'application/json',  # type: dict
+               "Authorization": "Bearer " + BOT_USER_OAUTH_TOKEN}
+
+    json_data = json.dumps(data).encode("utf-8")  # type: json
+    response = requests.post(url, json_data, headers=headers)
+    print(response)
+    print(response.text)
 
 
 if __name__ == '__main__':
