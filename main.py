@@ -44,6 +44,9 @@ def main(event, context):
     url = "https://slack.com/api/chat.postMessage"  # type: str
     data = {  # type: dict
         "channel": CHANNEL_ID,
+        "icon_emoji": ":googlecloud:",
+        "username": "GCP Error",
+        "as_user": "true",
         "blocks": str(blocks_data),
     }
     print(data)
