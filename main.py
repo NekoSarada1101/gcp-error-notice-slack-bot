@@ -42,7 +42,7 @@ def main(event, context):
         "channel": CHANNEL_ID,
         "username": "GCP Error",
         "icon_emoji": ":googlecloud:",
-        "blocks": blocks_data,
+        "blocks": str(blocks_data),
     }
     headers = {'Content-Type': 'application/json',
                "Authorization": "Bearer " + BOT_USER_OAUTH_TOKEN}
