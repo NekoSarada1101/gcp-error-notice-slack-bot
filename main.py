@@ -9,15 +9,15 @@ def main(event, context):
     log_data = json.loads(pubsub_message)  # type: dict
     print(log_data)
 
-    log_name = log_data["logName"]
-    resource = log_data["resource"]["labels"]
-    resource_data = ""
+    log_name = log_data["logName"]  # type: str
+    resource = log_data["resource"]["labels"]  # type: dict
+    resource_data = ""  # type: str
     for key, value in resource.items():
         resource_data = resource_data + "{} : {}\n".format(key, value)
 
-    log = log_data["textPayload"]
+    log = log_data["textPayload"]  # type: str
 
-    blocks_data = [
+    blocks_data = [  # type: dict
         {
             "type": "section",
             "text": {
@@ -41,15 +41,16 @@ def main(event, context):
         },
     ]
 
-    url = "https://slack.com/api/chat.postMessage"
-    data = {
+    url = "https://slack.com/api/chat.postMessage"  # type: str
+    data = {  # type: dict
         "channel": CHANNEL_ID,
         "blocks": str(blocks_data),
     }
-    headers = {'Content-Type': 'application/json',
+    print(data)
+    headers = {'Content-Type': 'application/json',  # type: dict
                "Authorization": "Bearer " + BOT_USER_OAUTH_TOKEN}
 
-    json_data = json.dumps(data).encode("utf-8")
+    json_data = json.dumps(data).encode("utf-8")  # type: json
     response = requests.post(url, json_data, headers=headers)
     print(response)
     print(response.text)
