@@ -50,6 +50,7 @@ def main(event, context):
     json_data = json.dumps(data).encode("utf-8")
     response = requests.post(url, json_data, headers=headers)
     print(response)
+    print(response.text)
 
 
 if __name__ == '__main__':
