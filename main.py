@@ -17,44 +17,26 @@ def main(event, context):
 
     log = log_data["textPayload"]  # type: str
 
-    blocks_data = [  # type: dict
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "*LogName*\n{}".format(log_name)
-            }
-        },
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "*ResourceInfo*\n{}".format(resource_data)
-            }
-        },
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "*LogInfo*\n{}".format(log)
-            }
-        },
-    ]
-
-    url = "https://slack.com/api/chat.postMessage"  # type: str
     data = {  # type: dict
-        "channel": CHANNEL_ID,
-        "icon_emoji": ":googlecloud:",
-        "username": "GCP Error",
-        "as_user": "true",
-        "blocks": str(blocks_data),
+        "attachments": [
+            {
+                "color": "00ffff",
+                "text": "*LogName*\n{}".format(log_name),
+            },
+            {
+                "color": "00bfff",
+                "text": "*ResourceInfo*\n{}".format(resource_data),
+            },
+            {
+                "color": "4169e1",
+                "text": "*LogInfo*\n{}".format(log)
+            },
+        ]
     }
     print(data)
-    headers = {'Content-Type': 'application/json',  # type: dict
-               "Authorization": "Bearer " + BOT_USER_OAUTH_TOKEN}
 
     json_data = json.dumps(data).encode("utf-8")  # type: json
-    response = requests.post(url, json_data, headers=headers)
+    response = requests.post(SLACK_WEBHOOK_URL, json_data)
     print(response)
     print(response.text)
 
